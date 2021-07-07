@@ -1,0 +1,8 @@
+# ignore test files
+test.*
+
+# ignore object files
+*.o
+
+# ignore debug files
+**/*.dSYM

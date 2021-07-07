@@ -23,17 +23,17 @@ class Node {
         friend bool operator==(Node &lhs, const Node& rhs);
 };
 
-Node::Node (int v) {
-    value = v;
+Node::Node (int value) {
+    this->value = value;
 }
 
-int Node::setValue(int v) {
-    value = v;
-    return value;
+int Node::setValue(int value) {
+    this->value = value;
+    return this->value;
 }
 
 int Node::getValue() const {
-    return value;
+    return this->value;
 }
 
 bool operator==(Node &lhs, const Node& rhs) {
@@ -63,19 +63,17 @@ class Tree {
 };
 
 Tree::Tree (Node* n) {
-    root = n;
+    this->root = n;
 }
 
 Tree::Tree (int value) {
-    Node root(value);
+    this->root = new Node(value);
 
-    this->root = &root;
 }
 
 bool Tree::addIterative(Node* n) {
     Node* parent = root;
     Node* current = root;
-    int c = 0;
 
     if (*n == *current) {
         cout << "Failed to add " << n->getValue() << ", as this node already exists!" << endl;
@@ -88,11 +86,7 @@ bool Tree::addIterative(Node* n) {
         current = parent->right;
     }
 
-    cout << parent->getValue() << endl;
-
     while(current != NULL) {
-
-        cout << "iter: " << ++c << endl;
 
         if (*n == *current) {
             cout << "Failed to add " << n->getValue() << ", as this node already exists!" << endl;
@@ -120,15 +114,13 @@ bool Tree::addIterative(Node* n) {
 
 }
 
-bool Tree::addIterative(int v) {
-    Node n(v);
+bool Tree::addIterative(int value) {
+    Node* n = new Node(value);
 
-    return this->addIterative(&n);
+    return this->addIterative(n);
 }
 
 bool Tree::addRecursive(Node* n, Node* root) {
-
-    cout << n->getValue() << endl;
 
     if (*n == *root) {
         cout << "Failed to add " << n->getValue() << ", as this node already exists!" << endl;
@@ -155,10 +147,10 @@ bool Tree::addRecursive(Node* n, Node* root) {
  
 }
 
-bool Tree::addRecursive(int v) {
-    Node n(v);
+bool Tree::addRecursive(int value) {
+    Node* n = new Node(value);
 
-    return this->addRecursive(&n, this->root);
+    return this->addRecursive(n, this->root);
 }
 
 Node* Tree::findBFS(int value) {
@@ -227,17 +219,20 @@ ostream& operator<<(ostream& os, const Tree& t) {
 
 int main() {
 
-    Tree t(3);
-
-    //t.addIterative(4);
-    //t.addRecursive(7);
-    //t.addIterative(5);
+    Tree* t = new Tree(4);
 
 
-    Node n(3);
-    Node n1(4);
-    Node* p = &n1;
+    t->addIterative(5);
+    t->addIterative(6);
+    t->addIterative(7);
 
-    cout << n.getValue() << endl;
-    cout << p->getValue() << endl;
+    t->addRecursive(1);
+    t->addRecursive(2);
+    t->addRecursive(3);
+    t->addRecursive(6);
+    t->addRecursive(7);
+    t->addRecursive(8);
+
+    delete t;
+
 }
