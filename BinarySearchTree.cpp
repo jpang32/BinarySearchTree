@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <queue>
 #include <stack>
+#include <set>
 
 using namespace std;
 
@@ -56,6 +57,7 @@ class Tree {
         bool addIterative(int);
         bool addRecursive(Node*, Node*);
         bool addRecursive(int);
+        Node* find(int);
         Node* findBFS(int);
         Node* findDFS(int);
         friend ostream& operator<<(ostream& os, const Tree& t);
@@ -67,6 +69,7 @@ Tree::Tree (Node* n) {
 }
 
 Tree::Tree (int value) {
+
     this->root = new Node(value);
 
 }
@@ -153,9 +156,28 @@ bool Tree::addRecursive(int value) {
     return this->addRecursive(n, this->root);
 }
 
+Node* Tree::find(int value) {
+    
+    Node* current = this->root;
+    
+    while(current != NULL) {
+        if (current->getValue() == value) {
+            return current;   
+        } else if (current -> getValue() < value) {
+            current = current->right;
+        } else {
+            current = current->left;
+        }
+
+    }
+
+    return NULL;
+
+}
+
 Node* Tree::findBFS(int value) {
 
-    Node* current = root;
+    Node* current = this->root;
 
     queue<Node*> nodeQueue;
 
@@ -177,27 +199,31 @@ Node* Tree::findBFS(int value) {
 
 Node* Tree::findDFS(int value) {
 
-    Node* current = root;
+    Node* current = this->root;
 
     stack<Node*> nodeStack;
+    set<int> visited;
 
     nodeStack.push(current);
+    visited.insert(current->getValue());
 
     while(!nodeStack.empty()) {
 
         current = nodeStack.top();
         
-        if (current->left) {
+        if (current->left && !visited.count(current->left->getValue())) {
             nodeStack.push(current->left);
+            visited.insert(current->left->getValue());
             continue;
-        } else if (current->right) {
+        } else if (current->right && !visited.count(current->right->getValue())) {
             nodeStack.push(current->right);
+            visited.insert(current->right->getValue());
             continue;
         }
 
         current = nodeStack.top();
         nodeStack.pop();
-
+        
         if(value == current->getValue()) return current;
         
     }
@@ -229,9 +255,14 @@ int main() {
     t->addRecursive(1);
     t->addRecursive(2);
     t->addRecursive(3);
+    t->addRecursive(5);
     t->addRecursive(6);
     t->addRecursive(7);
     t->addRecursive(8);
+
+    //cout << t->find(3)->getValue() << endl;
+    //cout << t->findBFS(5)->getValue() << endl;
+    cout << t->findDFS(7)->getValue() << endl;
 
     delete t;
 
